@@ -36,4 +36,19 @@ class StudentRepository{
         const insertedStudent = await Student.create(stu as any); 
         return this.ToStudentDto(insertedStudent);
     }
+
+    public async updateStudent(id: number, studentDto: Partial<StudentDTO>): Promise<[number, StudentDTO[]]> {
+        const [updated] = await Student.update(studentDto, { where: { id } });
+        if (updated) {
+          const updatedStudent = await Student.findByPk(id);
+          return [updated, updatedStudent ? [this.ToStudentDto(updatedStudent)] : []];
+        }
+        return [0, []];
+      }
+    
+      public async deleteStudent(id: number): Promise<number> {
+        return await Student.destroy({ where: { id } });
+      }
 }
+
+export default new StudentRepository();
